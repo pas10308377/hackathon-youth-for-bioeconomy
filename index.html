@@ -709,6 +709,37 @@
         transform: translateY(0);
       }
     }
+
+    .cta a {
+  position: relative;
+}
+
+.cta a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  opacity: 0.5;
+  filter: blur(12px);
+  z-index: -1;
+  animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.08); opacity: 0.2; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+    #progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #58a06d, #c7a86d);
+  width: 0%;
+  z-index: 999;
+}
   </style>
 </head>
 <body>
@@ -964,5 +995,35 @@
 
     reveals.forEach((el) => observer.observe(el));
   </script>
+
+  <script>
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rotateX = -(y / rect.height - 0.5) * 8;
+    const rotateY = (x / rect.width - 0.5) * 8;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "rotateX(0) rotateY(0) scale(1)";
+  });
+});
+</script>
+
+  <script>
+window.addEventListener("scroll", () => {
+  const scroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const progress = (scroll / height) * 100;
+  document.getElementById("progress").style.width = progress + "%";
+});
+</script>
+  
 </body>
+  <div id="progress"></div>
 </html>
